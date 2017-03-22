@@ -1,32 +1,26 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
 
-	"github.com/go-redis/redis"
+	"github.com/hashicorp/hcl"
+	"github.com/smo921/kubeq/queue"
 )
 
 const schedulerName = "kubeq"
 
-func doRedisStuff() (result string, err error) {
-	client := redis.NewClient(&redis.Options{
-		Addr:     "redis:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
-
-	result, err = client.Ping().Result()
-	client.Close()
-	return
-}
-
 func monitorJobQueue(done chan struct{}, wg *sync.WaitGroup) {
-	foo, _ := doRedisStuff()
-	log.Printf("doRedisStuff says: %s\n", foo)
+	foo, err := queue.DoRedisStuff()
+	if err != nil {
+		log.Fatalf("ERROR: %v\n", err)
+	} else {
+		log.Printf("DoRedisStuff says: '%s'\n", foo)
+	}
 	for {
 		select {
 		case <-done:
@@ -37,9 +31,20 @@ func monitorJobQueue(done chan struct{}, wg *sync.WaitGroup) {
 	}
 }
 
+func parseConfig() {
+	if hclText, err := ioutil.ReadFile("./kubeq.conf"); err == nil {
+		var out map[string]string
+		err = hcl.Decode(&out, string(hclText))
+		log.Printf("Redis Connect: %s:%s\n", out["redis_host"], out["redis_port"])
+	} else {
+		log.Println(err)
+	}
+}
+
 func main() {
 	log.Println("Starting kubeq scheduler . . .")
 
+	parseConfig()
 	doneChan := make(chan struct{})
 	var wg sync.WaitGroup
 
