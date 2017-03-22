@@ -1,14 +1,13 @@
 package main
 
 import (
-	"io/ioutil"
 	"log"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
 
-	"github.com/hashicorp/hcl"
+	"github.com/smo921/kubeq/config"
 	"github.com/smo921/kubeq/queue"
 )
 
@@ -31,20 +30,10 @@ func monitorJobQueue(done chan struct{}, wg *sync.WaitGroup) {
 	}
 }
 
-func parseConfig() {
-	if hclText, err := ioutil.ReadFile("./kubeq.conf"); err == nil {
-		var out map[string]string
-		err = hcl.Decode(&out, string(hclText))
-		log.Printf("Redis Connect: %s:%s\n", out["redis_host"], out["redis_port"])
-	} else {
-		log.Println(err)
-	}
-}
-
 func main() {
 	log.Println("Starting kubeq scheduler . . .")
 
-	parseConfig()
+	config.Parse()
 	doneChan := make(chan struct{})
 	var wg sync.WaitGroup
 
