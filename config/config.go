@@ -1,7 +1,6 @@
 package config
 
 import (
-	"io/ioutil"
 	"log"
 
 	"github.com/hashicorp/hcl"
@@ -19,14 +18,10 @@ type foo struct {
 	Port   int    `hcl:"port"`
 }
 
-func Parse() {
-	if hclText, err := ioutil.ReadFile("./kubeq.conf"); err == nil {
-		var out wombat
-		log.Println("Parsing Config\n", string(hclText))
-		err = hcl.Decode(&out, string(hclText))
-		log.Printf("Redis Connect: %v\n", out.ID)
-		log.Printf("  %+v\n", out.Queues[0])
-	} else {
-		log.Println(err)
-	}
+func Parse(input string) (out wombat, err error) {
+	log.Println("Parsing Config\n", input)
+	err = hcl.Decode(&out, input)
+	log.Printf("Redis Connect: %v\n", out.ID)
+	log.Printf("  %+v\n", out.Queues[0])
+	return
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
 	"os"
 	"os/signal"
@@ -31,9 +32,14 @@ func monitorJobQueue(done chan struct{}, wg *sync.WaitGroup) {
 }
 
 func main() {
-	log.Println("Starting kubeq scheduler . . .")
+	var hclText []byte
+	var err error
 
-	config.Parse()
+	log.Println("Starting kubeq scheduler . . .")
+	if hclText, err = ioutil.ReadFile("./kubeq.conf"); err != nil {
+		log.Fatal(err)
+	}
+	config.Parse(string(hclText))
 	doneChan := make(chan struct{})
 	var wg sync.WaitGroup
 
