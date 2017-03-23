@@ -14,9 +14,9 @@ func TestParseConfig(t *testing.T) {
     port = 1234
   }
 `
-	expect := wombat{
-		Queues: []*foo{
-			&foo{
+	expect := config{
+		Queues: []*queue{
+			&queue{
 				Driver: "test_type",
 				Host:   "localhost",
 				Port:   1234,

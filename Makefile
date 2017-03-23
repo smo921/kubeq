@@ -1,6 +1,6 @@
 VERSION := $(shell cat VERSION)
 BINARY = kubeq
-DEPS := $(shell find . -type f -iname *.go | egrep -v _test.go$)
+DEPS := $(shell find . -type f -iname '*.go' | egrep -v _test.g-o$)
 TESTS := $(shell find . -type f -iname *_test.go)
 
 all: $(BINARY)
