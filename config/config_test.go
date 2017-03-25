@@ -15,11 +15,12 @@ func TestParseConfig(t *testing.T) {
   }
 `
 	expect := config{
-		Queues: []*queue{
-			&queue{
-				Driver: "test_type",
-				Host:   "localhost",
-				Port:   1234,
+		Queues: []*Queue{
+			&Queue{
+				Driver:  "test_type",
+				Host:    "localhost",
+				Port:    1234,
+				Timeout: 2,
 			},
 		},
 	}

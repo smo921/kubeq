@@ -1,27 +1,42 @@
 package config
 
 import (
+	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/hcl"
 )
 
 type config struct {
 	ID     string   `hcl:"-"`
-	Queues []*queue `hcl:"queue,expand"`
+	Queues []*Queue `hcl:"queue,expand"`
 }
 
-type queue struct {
-	Name   string `hcl:,key`
-	Driver string `hcl:"type"`
-	Host   string `hcl:"host"`
-	Port   int    `hcl:"port"`
+type Queue struct {
+	Name     string        `hcl:,key`
+	Driver   string        `hcl:"type"`
+	Host     string        `hcl:"host"`
+	Port     int           `hcl:"port"`
+	Database int           `hcl:"db"`
+	Password string        `hcl:"password"`
+	Timeout  time.Duration `hcl:timeout`
 }
 
 func Parse(input string) (out config, err error) {
 	log.Println("Parsing Config\n", input)
 	err = hcl.Decode(&out, input)
-	log.Printf("Redis Connect: %v\n", out.ID)
-	log.Printf("  %+v\n", out.Queues[0].Host)
+	if err == nil {
+		for _, q := range out.Queues {
+			if q.Timeout == 0 {
+				log.Println("No timeout specified, defaulting to 2 seconds.")
+				q.Timeout = 2 * time.Second
+			}
+		}
+	}
 	return
+}
+
+func (q *Queue) Address() string {
+	return fmt.Sprintf("%s:%d", q.Host, q.Port)
 }
