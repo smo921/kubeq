@@ -4,6 +4,7 @@ import (
 	"log"
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestParseConfig(t *testing.T) {
@@ -20,7 +21,7 @@ func TestParseConfig(t *testing.T) {
 				Driver:  "test_type",
 				Host:    "localhost",
 				Port:    1234,
-				Timeout: 2,
+				Timeout: 2 * time.Second,
 			},
 		},
 	}
