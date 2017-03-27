@@ -1,0 +1,13 @@
+{
+    "dependencies": {
+        "github.com/go-redis/redis": {
+            "branch": "master"
+        },
+        "github.com/hashicorp/hcl": {
+            "branch": "master"
+        },
+        "k8s.io/client-go": {
+            "version": "^2.0.0"
+        }
+    }
+}

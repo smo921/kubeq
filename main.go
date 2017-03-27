@@ -19,7 +19,7 @@ func monitorJobQueue(qconf config.Queue, done chan struct{}, wg *sync.WaitGroup)
 	for {
 		select {
 		case job := <-jobs:
-			log.Printf("JOB:\n\tImage: '%v'\n\tArgs: '%v'\n", job.Image, job.Arguments)
+			job.Run()
 		case err := <-errc:
 			log.Println("ERROR:", err)
 		case <-done:
