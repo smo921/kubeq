@@ -8,7 +8,7 @@ all: $(BINARY)
 $(BINARY): $(DEPS)
 	CGO_ENABLED=0 GOOS=linux go build -a -tags netgo -ldflags '-w' .
 
-image:
+image: $(BINARY)
 	docker build -t smo921/$(BINARY):$(VERSION) .
 	docker push smo921/$(BINARY):$(VERSION)
 

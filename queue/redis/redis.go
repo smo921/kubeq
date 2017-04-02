@@ -24,7 +24,7 @@ func Read(conf config.Queue) (<-chan job.Job, <-chan error) {
 
 	go func() {
 		for {
-			result, err := client.LPop("foobar").Result()
+			result, err := client.LPop(conf.Name).Result()
 			if err == redis.Nil {
 				log.Println("No jobs found.")
 				time.Sleep(10 * time.Second)

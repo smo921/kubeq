@@ -9,12 +9,12 @@ import (
 )
 
 type config struct {
-	ID     string   `hcl:"-"`
+	//ID     string   `hcl:"-"`
 	Queues []*Queue `hcl:"queue,expand"`
 }
 
 type Queue struct {
-	Name     string        `hcl:,key`
+	Name     string        `hcl:",key"`
 	Driver   string        `hcl:"type"`
 	Host     string        `hcl:"host"`
 	Port     int           `hcl:"port"`

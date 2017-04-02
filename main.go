@@ -40,7 +40,7 @@ func main() {
 	}
 
 	conf, err := config.Parse(string(hclText))
-	log.Printf("Redis Connect: %v\n", conf.ID)
+	log.Println("Redis Connect")
 	log.Printf("  %+v\n", conf.Queues[0])
 
 	doneChan := make(chan struct{})

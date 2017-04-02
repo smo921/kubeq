@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Name }}
+spec:
+  template:
+    metadata:
+      name: {{ .Name }}
+    spec:
+      containers:
+      - name: {{ .Name }}
+        image: {{ .Image }}
+        command:
+{{- range .Command }}
+        - {{ . }}
+{{- end }}
+      restartPolicy: Never
